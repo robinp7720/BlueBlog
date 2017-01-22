@@ -1,13 +1,10 @@
 <?php
 require 'vendor/BlueView/BlueView.php';
-
 require 'simple_html_dom.php';
 
-$config = require('./config.php');
+$config = require './config.php';
 
-
-$BlueView = new Blue\View();
-$BlueView->setAppPath(__DIR__);
+$BlueView = new Blue\View(__DIR__);
 
 $mysqli = new mysqli("localhost", "root", "root", $config['database']);
 
@@ -16,11 +13,6 @@ $currentArticle = "";
 
 $currentPage = "article-list";
 
-if (isset($_GET['article'])) {
-    $currentPage = "article";
-}
-
-/* create a prepared statement */
 if ($stmt = $mysqli->prepare("SELECT * FROM articles ORDER BY post_time DESC ")) {
     $stmt->execute();
     $result = $stmt->get_result();
@@ -39,16 +31,12 @@ if ($stmt = $mysqli->prepare("SELECT * FROM articles ORDER BY post_time DESC "))
         ];
 
         if (isset($_GET['article'])) {
-            if ($_GET['article'] == $row['row_id']) {
-                $currentArticle .= $BlueView->render([
-                    "article" => $article
-                ], "partials/article-full");
-            }
+            $currentPage = "article";
+            if ($_GET['article'] == $row['row_id'])
+                $currentArticle .= $BlueView->render(["article" => $article], "partials/article-full");
         }
 
-        $summaries .= $BlueView->render([
-            "article" => $article
-        ],"partials/article-summary");
+        $summaries .= $BlueView->render(["article" => $article],"partials/article-summary");
     }
     $stmt->close();
 }
@@ -58,8 +46,6 @@ $mysqli->close();
 
 
 echo $BlueView->render([
-    "articles" => [
-        "summary" => $summaries
-    ],
+    "articles" => $summaries,
     "article" => $currentArticle
 ],"views/$currentPage");

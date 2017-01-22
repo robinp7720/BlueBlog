@@ -19,39 +19,14 @@ class View {
         return $output;
     }
 
-    /**
-     * @return string
-     */
-    public function getAppPath(): string
+    public function __construct($appPath,$theme = null)
     {
-        return $this->appPath;
-    }
-
-    /**
-     * @param string $appPath
-     */
-    public function setAppPath(string $appPath)
-    {
-        // Add a / to the end of the path if there is none
         if (substr($appPath, -1)!='/')
             $appPath .= '/';
         $this->appPath = $appPath;
-    }
 
-    /**
-     * @return string
-     */
-    public function getTheme(): string
-    {
-        return $this->theme;
-    }
-
-    /**
-     * @param string $theme
-     */
-    public function setTheme(string $theme)
-    {
-        $this->theme = $theme;
+        if ($theme)
+            $this->theme = $theme;
     }
 
     private function getView($view) {
