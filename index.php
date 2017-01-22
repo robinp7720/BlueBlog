@@ -1,7 +1,7 @@
 <?php
 require 'vendor/BlueView/BlueView.php';
 
-require('simple_html_dom.php');
+require 'simple_html_dom.php';
 
 $config = require('./config.php');
 
@@ -27,31 +27,27 @@ if ($stmt = $mysqli->prepare("SELECT * FROM articles ORDER BY post_time DESC "))
 
     while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
         $html = str_get_html($row['content']);
+        $article = [
+            "title" => $row['title'],
+            "date" => $row['post_time'],
+            "full" => $row['content'],
+            "author" => $row['author'],
+            "tags" => $row['tags'],
+            "summary" => $html->find('p', 0)->innertext,
+            "category" => $row['category'],
+            "link" => "?article=".$row['row_id']
+        ];
+
         if (isset($_GET['article'])) {
             if ($_GET['article'] == $row['row_id']) {
                 $currentArticle .= $BlueView->render([
-                    "article" => [
-                        "title" => $row['title'],
-                        "date" => $row['post_time'],
-                        "full" => $row['content'],
-                        "author" => $row['author'],
-                        "tags" => $row['tags'],
-                        "category" => $row['category']
-                    ]
+                    "article" => $article
                 ], "partials/article-full");
             }
         }
 
         $summaries .= $BlueView->render([
-            "article" => [
-                "title" => $row['title'],
-                "date" => $row['post_time'],
-                "summary" => $html->find('p', 0)->innertext ,
-                "author" => $row['author'],
-                "tags" => $row['tags'],
-                "category" => $row['category'],
-                "link" => "?article=".$row['row_id']
-            ]
+            "article" => $article
         ],"partials/article-summary");
     }
     $stmt->close();
