@@ -1,0 +1,12 @@
+<article itemscope itemtype="https://schema.org/BlogPosting">
+    <h2 itemprop="headline">{{ article.title }}</h2>
+    <div class="date meta-item" itemprop="dateCreated">{{ article.date }}</div>
+    <p itemprop="articleBody">
+        {{ article.full }}
+    </p>
+    <div class="meta">
+        <span class="author meta-item" itemprop="author"><i class="fa fa-user" aria-hidden="true"></i> {{ article.author }}</span>
+        <span class="tags meta-item" itemprop="keywords"><i class="fa fa-tags" aria-hidden="true"></i> {{ article.tags }}</span>
+        <span class="category meta-item" itemprop="category"><i class="fa fa-sticky-note" aria-hidden="true"></i> {{ article.category }}</span>
+    </div>
+</article>
