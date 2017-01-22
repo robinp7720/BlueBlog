@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
+    <title>Zey | The blog</title>
+</head>
+<body>
+<nav>
+    <div class="container">
+        <ul>
+            <li><h1>Zey</h1></li>
+            <li><a href="?">Home</a><div class="cover"></div></li>
+            <li><a href="https://me.mysunland.org/projects">Projects</a><div class="cover"></div></li>
+            <li><a href="https://me.mysunland.org">About me</a><div class="cover"></div></li>
+            <li><a href="https://mysunland.org">Minecraft</a><div class="cover"></div></li>
+        </ul>
+    </div>
+</nav>
+<main>
+    <div class="container">
+        {{ article }}
+    </div>
+</main>
+<link rel="stylesheet" href="assets/main.css">
+<script>
+    setTimeout(function(){
+        var queryDict = {};
+        location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]})
+
+        CKEDITOR.instances.article.on( 'change', function( evt ) {
+            // getData() returns CKEditor's HTML content.
+            console.log( 'Total bytes: ' + evt.editor.getData().length );
+            console.log(queryDict['article']);
+            var http = new XMLHttpRequest();
+            var url = "index.php?save&article="+queryDict['article'];
+            var params = "data="+encodeURIComponent(evt.editor.getData());
+            http.open("POST", url, true);
+
+            http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            http.onreadystatechange = function() {//Call a function when the state changes.
+                if(http.readyState == 4 && http.status == 200) {
+                    console.log("Saved!");
+                }
+            }
+            http.send(params);
+        });
+    },1000);
+</script>
+</body>
+</html>

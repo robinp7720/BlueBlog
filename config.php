@@ -4,5 +4,10 @@ return [
     "password" => "root",
     "database" => "BlueBlog",
     "host"     => "localhost",
-    "table"    => "articles"
+    "table"    => "articles",
+    "accounts" => [
+        "admin" => [
+            "password" => "admin"
+        ]
+    ]
 ];
